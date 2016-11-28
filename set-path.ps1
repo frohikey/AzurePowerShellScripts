@@ -3,7 +3,7 @@
     Set Path variable.
     Please, run as Administrator.
 .DESCRIPTION 
-   Creates a new website and a new Application Insight.  
+   Modify PATH environment settings.
 .EXAMPLE
    .\set-path.ps1 
 #>
