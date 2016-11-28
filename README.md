@@ -15,3 +15,11 @@ Create Application Insights.
 Add app settings:
 - WEBSITE_TIME_ZONE = Central Europe Standard Time
 - APPINSIGHTS_INSTRUMENTATIONKEY = Application Insights Instrumentation Key 
+
+## set-path
+
+`.\set-path.ps1`
+
+Modify PATH environment settings.
+
+_Must be run as administrator!_
