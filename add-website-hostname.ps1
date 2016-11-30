@@ -61,7 +61,7 @@ else
     }
 
     $n = $newHosts.Add($HostName)
-    $n++;
+    $n += 2;
     Write-Host "Adding $n. hostname: $HostName"
     
     Set-AzureWebsite -Name $WebSiteName -HostNames $newHosts
@@ -69,5 +69,3 @@ else
 }
 
 Write-Host "Complete!"
-
-

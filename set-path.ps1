@@ -11,5 +11,3 @@
 [Environment]::SetEnvironmentVariable("Path", $env:Path + ";c:\Data\AzurePowerShellScripts", [EnvironmentVariableTarget]::Machine)
 
 Write-Host "Complete!"
-
-
