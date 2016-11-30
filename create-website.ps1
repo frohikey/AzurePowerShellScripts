@@ -16,16 +16,19 @@
    .\create-website.ps1 -WebSiteName "myWebSiteName" [-ServicePlan] "ServicePlan" [-Location] "Location" 
 #>
 param(
-    [CmdletBinding( SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess=$true)]
          
-    # The webSite Name you want to create
+    # The webSite name you want to create
     [Parameter(Mandatory = $true)] 
     [string]$WebSiteName,
     
+    # Resource group name
     [string]$ResourceGroup = "Default-Web-WestEurope",
      
+    # Service plan
     [string]$ServicePlan = "CellONE",
 
+    # Location
     [string]$Location = "West Europe"
     )
 
@@ -38,17 +41,18 @@ if ((Get-Module -ListAvailable Azure) -eq $null)
 }
 
 # Check if there is already a login session in Azure Powershell
-Try
+try
 {
-    Get-AzureRmContext -ErrorAction Continue
+    $ctx = Get-AzureRmContext -ErrorAction Continue
 }
-Catch [System.Management.Automation.PSInvalidOperationException]
+catch [System.Management.Automation.PSInvalidOperationException]
 {
     Login-AzureRmAccount
 }
 
 # Create the website 
 $website = Get-AzureWebsite | Where-Object {$_.Name -eq $WebSiteName }
+
 if ($website -eq $null) 
 {   
     Write-Host "Testing website name '$WebSiteName'"
@@ -81,7 +85,7 @@ if ($website -eq $null)
     $appSettingList = $webApp.SiteConfig.AppSettings    
     
     $hash = @{}
-    ForEach ($kvp in $appSettingList) {
+    foreach ($kvp in $appSettingList) {
         $hash[$kvp.Name] = $kvp.Value        
     }
 
