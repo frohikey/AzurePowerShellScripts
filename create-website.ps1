@@ -51,9 +51,17 @@ Catch [System.Management.Automation.PSInvalidOperationException]
 $website = Get-AzureWebsite | Where-Object {$_.Name -eq $WebSiteName }
 if ($website -eq $null) 
 {   
-    Write-Host "Creating website '$WebSiteName' in '$ResourceGroup' for '$ServicePlan'." 
-    $website = New-AzureRMWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName -Location $Location -AppServicePlan $ServicePlan
+    Write-Host "Testing website name '$WebSiteName'"
+    $test = Test-AzureName -Website $WebSiteName
 
+    if ($test -eq $true)
+    {
+        throw "Website name '$WebSiteName' is not available."
+    }    
+    
+    Write-Host "Creating website '$WebSiteName' in '$ResourceGroup' for '$ServicePlan'." 
+    $website = New-AzureRMWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName -Location $Location -AppServicePlan $ServicePlan    
+    
     Write-Host "Setting PHP off"
     $website = Set-AzureRmWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName -PhpVersion "Off" 
     
@@ -65,7 +73,7 @@ if ($website -eq $null)
     $website = Set-AzureRmResource -PropertyObject $Properties -ResourceGroupName $ResourceGroup -ResourceType Microsoft.Web/sites -ResourceName $WebSiteName -ApiVersion 2015-08-01 -Force    
     
     Write-Host "Creating Application Insights"
-    $ai = New-AzureRmResource -ResourceName $WebSiteName -ResourceGroupName $ResourceGroup -Tag @{ applicationType = "web"; applicationName = $webSiteName} -ResourceType "Microsoft.Insights/components" -Location $Location -PropertyObject @{"Application_Type" = "web"} -Force
+    $ai = New-AzureRmResource -ResourceName $WebSiteName -ResourceGroupName $ResourceGroup -Tag @{ applicationType = "web"; applicationName = $webSiteName} -ResourceType "Microsoft.Insights/components" -Location $Location -PropertyObject @{"Application_Type" = "web"} "Microsoft.Insights/components" -Force
     Write-Host "IKey = " $ai.Properties.InstrumentationKey
 
     Write-Host "Adding app settings"
