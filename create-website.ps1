@@ -36,7 +36,17 @@ if ((Get-Module -ListAvailable Azure) -eq $null)
 {
     throw "Windows Azure Powershell not found! Please install from http://www.windowsazure.com/en-us/downloads/#cmd-line-tools"
 }
-   
+
+# Check if there is already a login session in Azure Powershell
+Try
+{
+    Get-AzureRmContext -ErrorAction Continue
+}
+Catch [System.Management.Automation.PSInvalidOperationException]
+{
+    Login-AzureRmAccount
+}
+
 # Create the website 
 $website = Get-AzureWebsite | Where-Object {$_.Name -eq $WebSiteName }
 if ($website -eq $null) 
@@ -55,7 +65,7 @@ if ($website -eq $null)
     $website = Set-AzureRmResource -PropertyObject $Properties -ResourceGroupName $ResourceGroup -ResourceType Microsoft.Web/sites -ResourceName $WebSiteName -ApiVersion 2015-08-01 -Force    
     
     Write-Host "Creating Application Insights"
-    $ai = New-AzureRmResource -ResourceName $WebSiteName -ResourceGroupName $ResourceGroup -Tag @{ applicationType = "web"; applicationName = $webSiteName} -ResourceType "Microsoft.Insights/components" -Location $Location  -PropertyObject @{"Application_Type" = "web"} -Force
+    $ai = New-AzureRmResource -ResourceName $WebSiteName -ResourceGroupName $ResourceGroup -Tag @{ applicationType = "web"; applicationName = $webSiteName} -ResourceType "Microsoft.Insights/components" -Location $Location -PropertyObject @{"Application_Type" = "web"} -Force
     Write-Host "IKey = " $ai.Properties.InstrumentationKey
 
     Write-Host "Adding app settings"
@@ -69,7 +79,7 @@ if ($website -eq $null)
 
     $hash['WEBSITE_TIME_ZONE'] = "Central Europe Standard Time"
     $hash['APPINSIGHTS_INSTRUMENTATIONKEY'] = $ai.Properties.InstrumentationKey
-    $website = Set-AzureRMWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName -AppSettings $hash                
+    $website = Set-AzureRMWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName -AppSettings $hash          
 }
 else 
 {        
