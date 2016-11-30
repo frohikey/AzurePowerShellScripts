@@ -73,7 +73,7 @@ if ($website -eq $null)
     $website = Set-AzureRmResource -PropertyObject $Properties -ResourceGroupName $ResourceGroup -ResourceType Microsoft.Web/sites -ResourceName $WebSiteName -ApiVersion 2015-08-01 -Force    
     
     Write-Host "Creating Application Insights"
-    $ai = New-AzureRmResource -ResourceName $WebSiteName -ResourceGroupName $ResourceGroup -Tag @{ applicationType = "web"; applicationName = $webSiteName} -ResourceType "Microsoft.Insights/components" -Location $Location -PropertyObject @{"Application_Type" = "web"} "Microsoft.Insights/components" -Force
+    $ai = New-AzureRmResource -ResourceName $WebSiteName -ResourceGroupName $ResourceGroup -Tag @{ applicationName = $webSiteName } -ResourceType microsoft.insights/components -Location $Location -PropertyObject @{"Application_Type" = "web"} -ApiVersion 2015-05-01 -Force
     Write-Host "IKey = " $ai.Properties.InstrumentationKey
 
     Write-Host "Adding app settings"
