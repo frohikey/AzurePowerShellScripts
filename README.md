@@ -16,6 +16,12 @@ Add app settings:
 - WEBSITE_TIME_ZONE = Central Europe Standard Time
 - APPINSIGHTS_INSTRUMENTATIONKEY = Application Insights Instrumentation Key 
 
+## add-website-hostname
+
+`.\add-website-hostname.ps1 -WebSiteName "myWebSiteName" -HostName "www.goto10.cz"`
+
+Add a new hostname for a given Azure Website.
+
 ## set-path
 
 `.\set-path.ps1`
