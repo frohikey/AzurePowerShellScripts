@@ -1,19 +1,15 @@
 ﻿<#
 .SYNOPSIS
-    Creates a Windows Azure Website with settings:
-    - Always on: true
-    - PHP: off
+    Creates a Windows Azure Website (PHP) with settings:
+    - Always on: true    
     - 64bit: true
-
-    Create Application Insights.
 
     Add app settings:
     WEBSITE_TIME_ZONE = Central Europe Standard Time
-    APPINSIGHTS_INSTRUMENTATIONKEY = Application Insights Instrumentation Key
 .DESCRIPTION 
-   Creates a new website and a new Application Insight.  
+   Creates a new PHP website.  
 .EXAMPLE
-   .\create-website.ps1 -WebSiteName "myWebSiteName" [-ServicePlan] "ServicePlan" [-Location] "Location" 
+   .\create-php-website.ps1 -WebSiteName "myWebSiteName" [-ServicePlan] "ServicePlan" [-Location] "Location" 
 #>
 param(
     [CmdletBinding(SupportsShouldProcess=$true)]
@@ -65,10 +61,7 @@ if ($website -eq $null)
     
     Write-Host "Creating website '$WebSiteName' in '$ResourceGroup' for '$ServicePlan'." 
     $website = New-AzureRMWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName -Location $Location -AppServicePlan $ServicePlan    
-    
-    Write-Host "Setting PHP off"
-    $website = Set-AzureRmWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName -PhpVersion "Off" 
-    
+        
     Write-Host "64bit mode on"
     $website = Set-AzureRmWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName -Use32BitWorkerProcess $false
     
@@ -76,10 +69,6 @@ if ($website -eq $null)
     $Properties = @{"siteConfig" = @{"AlwaysOn" = $true}}
     $website = Set-AzureRmResource -PropertyObject $Properties -ResourceGroupName $ResourceGroup -ResourceType Microsoft.Web/sites -ResourceName $WebSiteName -ApiVersion 2015-08-01 -Force    
     
-    Write-Host "Creating Application Insights"
-    $ai = New-AzureRmResource -ResourceName $WebSiteName -ResourceGroupName $ResourceGroup -Tag @{ applicationName = $webSiteName } -ResourceType microsoft.insights/components -Location $Location -PropertyObject @{"Application_Type" = "web"} -ApiVersion 2015-05-01 -Force
-    Write-Host "IKey = " $ai.Properties.InstrumentationKey
-
     Write-Host "Adding app settings"
     $webApp = Get-AzureRmWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName 
     $appSettingList = $webApp.SiteConfig.AppSettings    
@@ -89,8 +78,7 @@ if ($website -eq $null)
         $hash[$kvp.Name] = $kvp.Value        
     }
 
-    $hash['WEBSITE_TIME_ZONE'] = "Central Europe Standard Time"
-    $hash['APPINSIGHTS_INSTRUMENTATIONKEY'] = $ai.Properties.InstrumentationKey
+    $hash['WEBSITE_TIME_ZONE'] = "Central Europe Standard Time"    
     $website = Set-AzureRMWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName -AppSettings $hash          
 }
 else 
