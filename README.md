@@ -8,7 +8,7 @@ List of small scripts for managing resources in Azure.
 Creates a Windows Azure Website with settings:
 - Always on: true
 - PHP: off
-- 64bit: true
+- 32bit: true
 
 Create Application Insights.
 
@@ -22,7 +22,7 @@ Add app settings:
 
 Creates a Windows Azure Website with settings:
 - Always on: true
-- 64bit: true
+- 32bit: true
 
 Add app settings:
 - WEBSITE_TIME_ZONE = Central Europe Standard Time 

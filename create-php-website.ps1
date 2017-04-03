@@ -62,8 +62,8 @@ if ($website -eq $null)
     Write-Host "Creating website '$WebSiteName' in '$ResourceGroup' for '$ServicePlan'." 
     $website = New-AzureRMWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName -Location $Location -AppServicePlan $ServicePlan    
         
-    Write-Host "64bit mode on"
-    $website = Set-AzureRmWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName -Use32BitWorkerProcess $false
+    Write-Host "32bit mode on"
+    $website = Set-AzureRmWebApp -ResourceGroupName $ResourceGroup -Name $WebSiteName -Use32BitWorkerProcess $true
     
     Write-Host "Setting always on"
     $Properties = @{"siteConfig" = @{"AlwaysOn" = $true}}
