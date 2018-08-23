@@ -40,3 +40,9 @@ Add a new hostname for a given Azure Website.
 Modify PATH environment settings.
 
 _Must be run as administrator!_
+
+## storage-containers
+
+`.\storage-containers.ps1 -ResourceGroup myresourcegroup -StorageAccountName goto10`
+
+List all containers in Azure Storage account with a number of blobs + their size.

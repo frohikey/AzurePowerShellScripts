@@ -4,7 +4,7 @@
 .DESCRIPTION 
    List containers with stats: number/size of blobs.    
 .EXAMPLE
-   .\storage-containers.ps1 -ResourceGroup "myresourcegroup" -StorageAccountName "goto10"
+   .\storage-containers.ps1 -ResourceGroup myresourcegroup -StorageAccountName goto10
 #>
 param(
     [CmdletBinding(SupportsShouldProcess=$true)]
